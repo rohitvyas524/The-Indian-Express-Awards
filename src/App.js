@@ -17,26 +17,83 @@ const App = () => {
   const navigate = useNavigate();
 
   const handleNext = () => {
-    const sectionKey = `section${currentSection}`;
-    const formElements = document.querySelectorAll("form input, form select, form textarea");
+  const sectionKey = `section${currentSection}`;
+  const schemaKey = `Section ${currentSection}`;
+  const schema = formSchema[schemaKey];
+  const formElements = document.querySelectorAll("form input, form select, form textarea");
 
-    const data = {};
-    formElements.forEach((input) => {
-      const key = input.getAttribute("name");
-      if (!key) return;
+  const data = {};
+  const validationErrors = [];
 
-      if (input.type === "checkbox") {
-        data[key] = input.checked;
-      } else if (input.type === "file") {
-        data[key] = input.files[0];
-      } else {
-        data[key] = input.value;
+  formElements.forEach((input) => {
+    const key = input.getAttribute("name");
+    if (!key) return;
+
+    let value;
+    if (input.type === "checkbox") {
+      value = input.checked;
+    } else if (input.type === "file") {
+      value = input.files[0];
+    } else {
+      value = input.value?.trim();
+    }
+
+    let isValid = true;
+
+    if (value) {
+      // Find field schema
+      const findField = (key) => {
+        for (let field of schema.fields) {
+          if (field.type === "group") {
+            const match = field.fields.find(sf => `${field.key}_${sf.key}` === key);
+            if (match) return { ...match, required: match.required ?? field.required };
+          } else if (field.key === key) {
+            return field;
+          }
+        }
+        return null;
+      };
+
+      const field = findField(key);
+      if (!field) return;
+
+      if (field.type === "email") {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) {
+          isValid = false;
+          validationErrors.push(`${key} must be a valid email`);
+        }
       }
-    });
 
-    updateFormData(sectionKey, data);
-    setCurrentSection((prev) => Math.min(prev + 1, 5));
-  };
+      if (field.type === "url") {
+        try {
+          new URL(value);
+        } catch {
+          isValid = false;
+          validationErrors.push(`${key} must be a valid URL`);
+        }
+      }
+
+      if (field.type === "number") {
+        const parsed = Number(value);
+        if (value === "" || isNaN(parsed)) {
+          isValid = false;
+          validationErrors.push(`${key} must be a number`);
+        }
+      }
+    }
+
+    data[key] = isValid ? value : ""; // Clear invalid field if needed
+  });
+
+  if (validationErrors.length > 0) {
+    alert("⚠️ Please fix the following issues:\n\n" + validationErrors.join("\n"));
+    return; // stay on current section
+  }
+
+  updateFormData(sectionKey, data);
+  setCurrentSection((prev) => Math.min(prev + 1, 5));
+};
 
   const updateFormData = (sectionKey, sectionData) => {
     setFormData(prev => ({

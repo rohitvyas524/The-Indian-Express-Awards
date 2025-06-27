@@ -29,4 +29,16 @@ router.put("/:id", async (req, res) => {
   res.json(data);
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedNomination = await Nomination.findByIdAndDelete(req.params.id);
+    if (!deletedNomination) {
+      return res.status(404).json({ message: "Nomination not found" });
+    }
+    res.status(200).json({ message: "Nomination deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 module.exports = router;

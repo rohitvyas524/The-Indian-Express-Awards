@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
-import { Pencil } from 'lucide-react';
-
+import { Pencil, Trash2 } from 'lucide-react';
 const categories = {
   "Hospitals & Clinics": [{ title: "Excellence in Cardiac Care", disabled: false }],
   "Practitioners": [{ title: "Specialist of the year - Cardiology", disabled: false }],
@@ -22,6 +21,23 @@ function Dashboard() {
   const [filterStatus, setFilterStatus] = useState("All");
   const navigate = useNavigate();
   const modalRef = useRef();
+
+  const handleDelete = (id) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this nomination?");
+    if (!confirmDelete) return;
+
+    axios.delete(`http://localhost:5001/api/nominations/${id}`, { withCredentials: true })
+      .then(() => {
+        // Refresh the list after deletion
+        axios.get('http://localhost:5001/api/nominations', { withCredentials: true })
+          .then(res => setNominations(res.data))
+          .catch(err => console.error(err));
+      })
+      .catch(err => {
+        console.error("Delete error:", err);
+        alert("Failed to delete nomination.");
+      });
+  };
 
   useEffect(() => {
     axios.get('http://localhost:5001/api/nominations', { withCredentials: true })
@@ -133,7 +149,7 @@ function Dashboard() {
               width: '220px'
             }}
           >
-            <option value="All">⌥ Filter</option>
+            <option value="All">⌥ All</option>
             <option value="Draft">Draft</option>
             <option value="Submitted">Submitted</option>
           </select>
@@ -153,7 +169,7 @@ function Dashboard() {
 
       {/* Stats */}
       <div style={{ display: 'flex', gap: '20px', marginBottom: '24px' }}>
-        <div  style={{ ...cardStyle, ...hoverCard }}> <h3>Total Nominations</h3><h2>{nominations.length}</h2> </div>
+        <div style={{ ...cardStyle, ...hoverCard }}> <h3>Total Nominations</h3><h2>{nominations.length}</h2> </div>
         <div style={{ ...cardStyle, ...hoverCard }}> <h3>Drafts</h3><h2 style={{ color: 'red' }}>{draftCount}</h2> </div>
         <div style={{ ...cardStyle, ...hoverCard }}> <h3>Submitted</h3><h2 style={{ color: 'green' }}>{submittedCount}</h2> </div>
       </div>
@@ -201,10 +217,26 @@ function Dashboard() {
                     fontSize: '14px',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '6px'
+                    gap: '6px',
+                    marginRight: '10px'
                   }}>
                     <Pencil size={16} /> Edit
                   </Link>
+
+                  <button onClick={() => handleDelete(nom._id)} style={{
+                    backgroundColor: '#ef4444',
+                    border: 'none',
+                    color: '#fff',
+                    padding: '6px 10px',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontSize: '14px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px'
+                  }}>
+                    <Trash2 size={16} /> 
+                  </button>
                 </td>
               </tr>
             );

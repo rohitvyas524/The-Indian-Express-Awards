@@ -19,9 +19,81 @@ const EditNominationForm = () => {
       .then(res => setFormData(res.data))
       .catch(err => console.error("Error loading nomination:", err));
   }, [id]);
-
   const handleNext = () => {
-    saveCurrentSectionData();
+    const sectionKey = `Section ${currentSection}`;
+    const schema = formSchema[sectionKey];
+    const formElements = document.querySelectorAll("form input, form select, form textarea");
+
+    const data = {};
+    const validationWarnings = [];
+
+    formElements.forEach((input) => {
+      const key = input.getAttribute("name");
+      if (!key) return;
+
+      let value;
+      if (input.type === "checkbox") {
+        value = input.checked;
+      } else if (input.type === "file") {
+        value = input.files[0];
+      } else {
+        value = input.value?.trim();
+      }
+
+      // Only validate if the user has filled something
+      if (value) {
+        const findField = (key) => {
+          for (let f of schema.fields) {
+            if (f.type === "group") {
+              const match = f.fields.find(sf => `${f.key}_${sf.key}` === key);
+              if (match) return { ...match, required: match.required ?? f.required };
+            } else if (f.key === key) {
+              return f;
+            }
+          }
+          return null;
+        };
+
+        const field = findField(key);
+        if (!field) return;
+
+        let isValid = true;
+
+        if (field.type === "email") {
+          const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+          if (!emailRegex.test(value)) {
+            validationWarnings.push(`${key} must be a valid email`);
+            isValid = false;
+          }
+        }
+
+        if (field.type === "url") {
+          try {
+            new URL(value);
+          } catch {
+            validationWarnings.push(`${key} must be a valid URL`);
+            isValid = false;
+          }
+        }
+
+        if (field.type === "number" && isNaN(Number(value))) {
+          validationWarnings.push(`${key} must be a number`);
+          isValid = false;
+        }
+
+        data[key] = isValid ? value : "";
+      } else {
+        data[key] = value;
+      }
+    });
+
+    updateFormData(`section${currentSection}`, data);
+
+    if (validationWarnings.length > 0) {
+      alert("⚠️ Please fix the following issues:\n\n" + validationWarnings.join("\n"));
+      return; // Stay on the section
+    }
+
     setCurrentSection((prev) => Math.min(prev + 1, 5));
   };
 

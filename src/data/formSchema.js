@@ -86,7 +86,7 @@ const formSchema = {
             {
                 "label": "Contact Number",
                 "key": "spoc_contact",
-                "type": "text",
+                "type": "number",
                 "required": true
             },
             {
