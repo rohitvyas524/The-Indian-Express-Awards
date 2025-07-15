@@ -3,20 +3,15 @@ const router = express.Router();
 const Nomination = require("../models/Nomination");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = process.env.JWT_SECRET;
 
 function getUserIdFromToken(req) {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer ")) return null;
 
   const token = authHeader.split(" ")[1];
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded.id; // should match what you encode in login
-  } catch (err) {
-    console.error("JWT verify failed:", err);
-    return null;
-  }
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  return decoded.id;
+
 }
 
 router.post("/", async (req, res) => {
@@ -48,7 +43,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET all nominations (for admin only)
 router.get("/all", async (req, res) => {
   const userId = getUserIdFromToken(req);
   if (!userId) return res.status(401).json({ message: "Unauthorized" });
