@@ -41,7 +41,6 @@ const MultiSectionForm = () => {
       let isValid = true;
 
       if (value) {
-        // Find field schema
         const findField = (key) => {
           for (let field of schema.fields) {
             if (field.type === "group") {
@@ -83,12 +82,12 @@ const MultiSectionForm = () => {
         }
       }
 
-      data[key] = isValid ? value : ""; // Clear invalid field if needed
+      data[key] = isValid ? value : ""; 
     });
 
     if (validationErrors.length > 0) {
       alert("⚠️ Please fix the following issues:\n\n" + validationErrors.join("\n"));
-      return; // stay on current section
+      return; 
     }
 
     updateFormData(sectionKey, data);
@@ -153,7 +152,7 @@ const MultiSectionForm = () => {
         }
 
         if (field.required && (val === undefined || val === "")) {
-          return false; // Required field missing
+          return false; 
         }
       }
     }
@@ -223,7 +222,7 @@ const MultiSectionForm = () => {
     axios.post("http://localhost:5001/api/nominations", finalDataToSend, {
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${user.token}`,  // ✅ token correctly passed here
+        Authorization: `Bearer ${user.token}`, 
       },
     })
       .then(() => {

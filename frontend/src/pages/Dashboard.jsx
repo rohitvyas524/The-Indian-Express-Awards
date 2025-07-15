@@ -53,7 +53,7 @@ function Dashboard() {
       .then(res => {
         const data = res.data;
 
-        // 🟢 For admin: keep only submitted nominations
+        // For admin: keep only submitted nominations
         const filtered = user?.role === "admin"
           ? data.filter(n => n.section5?.ready_for_submission !== "No, Keep in Draft")
           : data;

@@ -51,7 +51,6 @@ const EditNominationForm = () => {
         value = input.value?.trim();
       }
 
-      // Only validate if the user has filled something
       if (value) {
         const findField = (key) => {
           for (let f of schema.fields) {
@@ -102,7 +101,7 @@ const EditNominationForm = () => {
 
     if (validationWarnings.length > 0) {
       alert("⚠️ Please fix the following issues:\n\n" + validationWarnings.join("\n"));
-      return; // Stay on the section
+      return; 
     }
 
     setCurrentSection((prev) => Math.min(prev + 1, 5));
@@ -307,7 +306,7 @@ const EditNominationForm = () => {
             });
           }
 
-          let circleColor = "#dc3545"; // red
+          let circleColor = "#dc3545"; //red
           let circleContent = sectionIndex;
 
           if (isActive) {
