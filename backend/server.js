@@ -6,7 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 require("dotenv").config();
 
 const app = express();
-console.log("data going to be sent to the server");
+console.log("Data sent to server");
 
 app.use(cors({
   origin: ["http://localhost:3000"],
