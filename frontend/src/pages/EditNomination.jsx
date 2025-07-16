@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+const apiUrl = process.env.REACT_APP_API_URL;
+
 import axios from "axios";
 import Section1form from './Section1form';
 import Section2Form from "./Section2form";
@@ -18,7 +20,7 @@ const EditNominationForm = () => {
     const token = JSON.parse(localStorage.getItem("user"))?.token;
     if (!token) return;
 
-    axios.get(`http://localhost:5001/api/nominations/${id}`, {
+    axios.get(`${apiUrl}/api/nominations/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -201,7 +203,7 @@ const EditNominationForm = () => {
 
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
-    axios.put(`http://localhost:5001/api/nominations/${id}`, updatedForm, {
+    axios.put(`${apiUrl}/api/nominations/${id}`, updatedForm, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

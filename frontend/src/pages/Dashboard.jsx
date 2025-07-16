@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
+const apiUrl = process.env.REACT_APP_API_URL;
+
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Pencil, Trash2 } from 'lucide-react';
@@ -39,8 +41,8 @@ function Dashboard() {
 
   const fetchNominations = () => {
     const endpoint = user?.role === "admin"
-      ? "http://localhost:5001/api/nominations/all"
-      : "http://localhost:5001/api/nominations";
+      ? `${apiUrl}/api/nominations/all`
+      : `${apiUrl}/api/nominations`;
 
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
@@ -82,7 +84,7 @@ function Dashboard() {
 
     const token = JSON.parse(localStorage.getItem("user"))?.token;
 
-    axios.delete(`http://localhost:5001/api/nominations/${id}`, {
+    axios.delete(`${apiUrl}/api/nominations/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

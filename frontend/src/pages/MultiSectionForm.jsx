@@ -5,6 +5,8 @@ import Section3form from "./Section3form";
 import Section4Form from "./Section4form";
 import Section5Form from "./Section5form";
 import { useNavigate, useLocation } from "react-router-dom";
+const apiUrl = process.env.REACT_APP_API_URL;
+
 import axios from "axios";
 import formSchema from "../data/formSchema";
 
@@ -219,7 +221,7 @@ const MultiSectionForm = () => {
     }
     const user = JSON.parse(localStorage.getItem("user"));
     console.log("Token:", user?.token);
-    axios.post("http://localhost:5001/api/nominations", finalDataToSend, {
+    axios.post(`${apiUrl}/api/nominations`, finalDataToSend, {
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${user.token}`, 

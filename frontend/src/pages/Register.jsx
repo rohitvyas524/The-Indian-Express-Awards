@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+const apiUrl = process.env.REACT_APP_API_URL;
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 
@@ -12,7 +13,6 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
-    e.preventDefault();
     setError("");
 
     if (password !== confirmPass) {
@@ -21,7 +21,7 @@ const Register = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5001/api/auth/register", {
+      const res = await axios.post(`${apiUrl}/api/auth/register`, {
         name,
         email,
         password,
