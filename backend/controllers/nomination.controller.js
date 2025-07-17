@@ -23,7 +23,7 @@ exports.getUserNominations = async (req, res) => {
 };
 
 exports.getAllNominations = async (req, res) => {
-    return;
+   // return;
   if (req.user.role !== "admin") {
     return res.status(403).json({ message: "Access denied" });
   }

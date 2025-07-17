@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const auth = require("../middlewares/auth.middleware");
 const nominationController = require("../controllers/nomination.controller");
+const authMiddleware = require("../middleware/auth.middleware");
 
-router.post("/", auth, nominationController.createNomination);
-router.get("/", auth, nominationController.getUserNominations);
-router.get("/all", auth, nominationController.getAllNominations);
-router.get("/:id", auth, nominationController.getNominationById);
-router.put("/:id", auth, nominationController.updateNomination);
-router.delete("/:id", auth, nominationController.deleteNomination);
+//  All these routes require the user to be authenticated
+router.post("/", authMiddleware, nominationController.createNomination);
+router.get("/", authMiddleware, nominationController.getUserNominations);
+router.get("/all", authMiddleware, nominationController.getAllNominations);
+router.get("/:id", authMiddleware, nominationController.getNominationById);
+router.put("/:id", authMiddleware, nominationController.updateNomination);
+router.delete("/:id", authMiddleware, nominationController.deleteNomination);
 
 module.exports = router;
