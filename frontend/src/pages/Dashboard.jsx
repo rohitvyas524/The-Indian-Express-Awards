@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-const apiUrl = process.env.REACT_APP_API_URL;
 
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const categories = {
   "Hospitals & Clinics": [{ title: "Excellence in Cardiac Care", disabled: false }],
@@ -54,6 +54,7 @@ function Dashboard() {
     })
       .then(res => {
         const data = res.data;
+      //  console.log('akki',data);
 
         // For admin: keep only submitted nominations
         const filtered = user?.role === "admin"

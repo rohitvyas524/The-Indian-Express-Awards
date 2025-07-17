@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-const apiUrl = process.env.REACT_APP_API_URL;
 
 import axios from "axios";
 import Section1form from './Section1form';
@@ -9,6 +8,7 @@ import Section3form from "./Section3form";
 import Section4Form from "./Section4form";
 import Section5Form from "./Section5form";
 import formSchema from "../data/formSchema";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const EditNominationForm = () => {
   const { id } = useParams();

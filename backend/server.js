@@ -10,7 +10,7 @@ const app = express();
 console.log("Data sent to server");
 
 app.use(cors({
-  origin: ["http://localhost:3001"],
+  origin: ["http://localhost:3000"],
   credentials: true,
 }));
 app.use(express.json());

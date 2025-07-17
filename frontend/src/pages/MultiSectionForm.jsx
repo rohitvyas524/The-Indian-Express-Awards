@@ -5,10 +5,10 @@ import Section3form from "./Section3form";
 import Section4Form from "./Section4form";
 import Section5Form from "./Section5form";
 import { useNavigate, useLocation } from "react-router-dom";
-const apiUrl = process.env.REACT_APP_API_URL;
 
 import axios from "axios";
 import formSchema from "../data/formSchema";
+const apiUrl = process.env.REACT_APP_API_URL;
 
 const MultiSectionForm = () => {
   const location = useLocation();
